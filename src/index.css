@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root{
+  color-scheme: light ;
+}
+
+option {
+  font-weight: normal;
+  display: flex;
+  min-height: 1em;
+  padding: 0px 1px 1px;
+  white-space: nowrap;
+  width: 10px !important;
+}

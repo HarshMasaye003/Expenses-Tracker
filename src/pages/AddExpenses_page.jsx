@@ -5,6 +5,10 @@ import { IoMdAddCircleOutline } from "react-icons/io";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase/firebase_config";
 
+const MoneyCard = ({ amount, icon, category, timeStamp }) => {
+  return <></>;
+};
+
 const AddExpenses_page = () => {
   const [isModalOpen, setIsModalOpen] = useState(false); // State to track modal open/close
 
@@ -21,7 +25,6 @@ const AddExpenses_page = () => {
       res.forEach((doc) => {
         expensesData.push(doc.data());
       });
-      // console.log(expensesData);
       setExpenseData(expensesData);
     } catch (error) {
       console.error("Error fetching expenses:", error);
@@ -29,8 +32,17 @@ const AddExpenses_page = () => {
   };
 
   useEffect(() => {
-    // getExensesData();
+    getExensesData();
   }, []);
+
+
+  
+  const convertTimestamp = (timestamp) => {
+    const date = new Date(timestamp.seconds * 1000);
+    return date.toDateString();
+  };
+
+
 
   return (
     <div className="h-[82%] w-full sm:w-[40%] md:ww-[40%]">
@@ -43,23 +55,27 @@ const AddExpenses_page = () => {
             getExensesData={getExensesData}
           />
         )}
-        <div>
-          <table className="table-auto border-separate border-spacing-0 border border-slate-500/90" bgcolor="">
-            <thead>
-              <tr>
-                <th className="border border-slate-600 p-1">Amount</th>
-                <th className="border border-slate-600">Category</th>
-              </tr>
-            </thead>
-            <tbody>
-              {expenseData.map((expense) => (
-                <tr key={expense.timeStamp}>
-                  <td>{`Rs ${expense.amount} `}</td>
-                  <td>{expense.category}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <div className="w-full">
+          {expenseData.map((expense) => (
+            <div
+              key={expense.timeStamp}
+              className="bg-white px-3 py-2 flex justify-between items-center w-full border-b-[1px] border-gray-300 "
+            >
+              <div className="flex items-center gap-4">
+                <div className=" bg-blue-300 py-1 rounded-lg text-3xl">
+                  <span>{expense.icon}</span>
+                </div>
+                <div>
+                  <h1 className=" text-lg font-semibold">{expense.category}</h1>
+                  <h3 className=" text-sm" >{convertTimestamp(expense.timeStamp)}</h3>
+                </div>
+              </div>
+
+              <div>
+                <h1 className="text-lg font-semibold">{`-$${expense.amount}`}</h1>
+              </div>
+            </div>
+          ))}
         </div>
 
         <button

@@ -8,31 +8,44 @@ import { IoIosArrowUp } from "react-icons/io";
 import { IoIosArrowDown } from "react-icons/io";
 
 
+
+
 const Settings_page = () => {
   const { categories, addCategory } = useCategories();
   const [categoryModalOpen, setCategoryModalOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("");
-  const [newCategory, setNewCategory] = useState("");
+  const [newCategory, setNewCategory] = useState([{ icon: "", category: "" }]);
 
-  const handleSelectChange = (event) => {
-    setSelectedCategory(event.target.value);
-    console.log(selectedCategory);
+  // const handleSelectChange = (event) => {
+  //   setSelectedCategory(event.target.value);
+  //   console.log(selectedCategory);
+  // };
+
+  const [inputs, setInputs] = useState({
+    icon: "",
+    category: "",
+  });
+
+  const handleInputChange = (key, value) => {
+    setInputs({
+      ...inputs,
+      [key]: value,
+    });
   };
 
   const handleAddCategory = async () => {
-    if (!newCategory) {
+    if (!inputs) {
       alert("Please enter a category");
       return;
     }
     try {
-      await addCategory(newCategory);
+      await addCategory(inputs);
       Swal.fire({
         icon: "success",
         title: "Category Added!",
-        text: `${newCategory} has been Added.`,
+        text: `${inputs.icon} ${inputs.category} has been Added.`,
         showConfirmButton: false,
         timer: 1200,
-        heightAuto: false,
       });
       setNewCategory("");
       setCategoryModalOpen(!categoryModalOpen);
@@ -61,7 +74,7 @@ const Settings_page = () => {
     }
   };
 
-  const [open,setOpen] = useState(false)
+  const [open, setOpen] = useState(false);
 
   return (
     <>
@@ -80,9 +93,12 @@ const Settings_page = () => {
               type="checkbox"
             />
             <span className="block max-h-[3.4rem] overflow-hidden rounded-lg bg-white shadow-xl transition-all duration-300 peer-checked/showLabel:max-h-52">
-              <div onClick={(open)=>setOpen(true)} className="flex justify-between h-14 px-2 cursor-pointer items-center font-bold text-lg">
+              <div
+                onClick={(open) => setOpen(true)}
+                className="flex justify-between h-14 px-2 cursor-pointer items-center font-bold text-lg"
+              >
                 <h1>Categories</h1>
-                <h2>{open ? <IoIosArrowUp/> : <IoIosArrowDown/>}</h2>
+                <h2>{open ? <IoIosArrowUp /> : <IoIosArrowDown />}</h2>
               </div>
               <div className="">
                 <div className="border-t-[1px] px-2 bg-white w-full border-gray-300 h-14 flex justify-between items-center ">
@@ -108,33 +124,42 @@ const Settings_page = () => {
           </label>
         </section>
       </div>
-      {/* {categoryModalOpen && (
-        <div className="absolute top-1/3 left-1/2 transform -translate-x-1/2 bg-white p-4 rounded-lg z-40 flex flex-col gap-2">
-          <input
-            value={newCategory}
-            onChange={(e) => setNewCategory(e.target.value)}
-            type="text"
-            placeholder="Enter category..."
-            className="border border-gray-300 p-2 rounded-lg"
-          />
-          <div className="flex justify-between gap-2">
+      {categoryModalOpen && (
+        <div className="absolute w-[90%] top-1/3 left-1/2 transform -translate-x-1/2 bg-white p-4 rounded-lg z-40 flex flex-col gap-2">
+          <div className="flex gap-2 justify-center">
+            <input
+              value={inputs.icon}
+              onChange={(e) => handleInputChange('icon', e.target.value)}
+              type="text"
+              placeholder="icon..."
+              className=" w-[20%] border border-gray-300 p-2 rounded-lg"
+            />
+            <input
+              value={inputs.category}
+              onChange={(e) => handleInputChange('category', e.target.value)}
+              type="text"
+              placeholder="Add category..."
+              className=" w-[80%] border border-gray-300 p-2 rounded-lg"
+            />
+          </div>
+          <div className="flex justify-center gap-2">
             <button
               onClick={handleAddCategory}
-              className=" bg-emerald-500/90 h-10 w-[6.5rem] rounded-md"
+              className=" bg-emerald-500/90 font-semibold text-lg text-white h-10 w-[6.5rem] rounded-md"
             >
               Confirm
             </button>
             <button
               onClick={() => setCategoryModalOpen(!categoryModalOpen)}
-              className="bg-blue-500/90 h-10 w-[6.5rem] rounded-md"
+              className="bg-red-500/90 font-semibold text-lg text-white h-10 w-[6.5rem] rounded-md"
             >
               close
             </button>
           </div>
         </div>
-      )} */}
+      )}
 
-      {categoryModalOpen && (
+      {/* {categoryModalOpen && (
         <div className="absolute top-1/3 left-1/2 transform -translate-x-1/2 bg-white p-4 rounded-lg z-40 flex flex-col gap-2">
           <div className="w-full ">
             <select
@@ -167,7 +192,7 @@ const Settings_page = () => {
             </button>
           </div>
         </div>
-      )}
+      )} */}
     </>
   );
 };

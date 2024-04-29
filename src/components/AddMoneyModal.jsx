@@ -11,6 +11,9 @@ import { db } from "../firebase/firebase_config";
 import { v4 as uuidv4 } from "uuid";
 import useCategories from "../hooks/useCategories";
 
+
+
+
 const AddMoneyModal = ({
   toggleModal,
   isModalOpen,
@@ -18,12 +21,17 @@ const AddMoneyModal = ({
   getExensesData,
 }) => {
   const { categories } = useCategories();
-  const [selectedOption, setSelectedOption] = useState("");
+
+
+  const [selectedOption, setSelectedOption] = useState([]);
+
+  console.log(selectedOption)
 
   const [amount, setAmount] = useState(0);
 
   const handleSelectChange = (event) => {
-    setSelectedOption(event.target.value);
+    const json_obj = JSON.parse(event.target.value);
+    setSelectedOption(json_obj);
   };
 
   const Toast = Swal.mixin({
@@ -51,13 +59,14 @@ const AddMoneyModal = ({
       try {
         const res = await setDoc(doc(db, "expenses", uuidv4()), {
           amount: amount,
-          category: selectedOption,
+          icon: selectedOption.icon,
+          category: selectedOption.category,
           timeStamp: serverTimestamp(),
         });
         Toast.fire({
           icon: "success",
           title: "Expense Added!",
-          text: `${amount} -> ${selectedOption}' has been Added.`,
+          text: `${amount} -> ${selectedOption.icon}' has been Added.`,
           showConfirmButton: false,
           timer: 1500,
         });
@@ -108,12 +117,14 @@ const AddMoneyModal = ({
                   Select a category
                 </option>
                 {categories.map((category, index) => (
-                  <option key={index} value={category}>
-                    {category}
+                  <option key={index} value={JSON.stringify(category)}>
+                    {category.icon} {category.category}
                   </option>
                 ))}
               </select>
             </div>
+
+
           </div>
         </div>
         <div className="flex justify-around mt-2 pt-4 ">

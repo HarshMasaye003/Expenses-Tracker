@@ -12,21 +12,21 @@ const useCategories = () => {
         const querySnapshot = await getDocs(collection(db, "categories"));
         const categoriesData = [];
         querySnapshot.forEach((doc) => {
-          categoriesData.push(doc.data().category);
+          categoriesData.push(doc.data());
         });
         setCategories(categoriesData);
       } catch (error) {
         console.error("Error fetching categories:", error);
       }
     };
-
     fetchCategories();
   }, []);
 
   const addCategory = useCallback(async (newCategory) => {
     try {
       await setDoc(doc(db, "categories", uuidv4()), {
-        category: newCategory,
+        icon: newCategory.icon,
+        category: newCategory.category,
       });
       setCategories((prevCategories) => [...prevCategories, newCategory]);
     } catch (error) {

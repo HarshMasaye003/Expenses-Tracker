@@ -4,7 +4,6 @@ import AddMoneyModal from "../components/AddMoneyModal";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase/firebase_config";
-import TempTable from "../components/TempTable";
 
 const AddExpenses_page = () => {
   const [isModalOpen, setIsModalOpen] = useState(false); // State to track modal open/close
@@ -30,7 +29,7 @@ const AddExpenses_page = () => {
   };
 
   useEffect(() => {
-    getExensesData();
+    // getExensesData();
   }, []);
 
   return (
@@ -45,7 +44,7 @@ const AddExpenses_page = () => {
           />
         )}
         <div>
-          <table className=" table-auto border-separate border-spacing-0 border border-slate-500" bgcolor="">
+          <table className="table-auto border-separate border-spacing-0 border border-slate-500/90" bgcolor="">
             <thead>
               <tr>
                 <th className="border border-slate-600 p-1">Amount</th>
@@ -64,10 +63,10 @@ const AddExpenses_page = () => {
         </div>
 
         <button
-          className="h-10 w-10 z-10 absolute flex justify-center items-center bottom-24 right-5 bg-red-400 rounded-md"
+          className="h-10 sm:h-10 md:h-14 lg:h-20 w-10 sm:w-10 md:w-14 lg:w-20 z-10 absolute flex justify-center items-center bottom-[6.5rem] sm:bottom-30 md:bottom-30 lg:bottom-40 right-[0.8rem] bg-blue-400 rounded-md"
           onClick={toggleModal}
         >
-          <IoMdAddCircleOutline className="text-white text-3xl" />
+          <IoMdAddCircleOutline className="text-white text-3xl sm:text-3xl md:text-5xl lg:text-5xl " />
         </button>
       </section>
     </div>

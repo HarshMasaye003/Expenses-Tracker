@@ -26,15 +26,26 @@ const AddMoneyModal = ({
     setSelectedOption(event.target.value);
   };
 
+  const Toast = Swal.mixin({
+    toast: true,
+    position: "top",
+    showConfirmButton: false,
+    timer: 1200,
+    // timerProgressBar: true,
+    didOpen: (toast) => {
+      toast.onmouseenter = Swal.stopTimer;
+      toast.onmouseleave = Swal.resumeTimer;
+    },
+  });
+
   const addFullExpense = async () => {
     if (!amount || !selectedOption) {
-      Swal.fire({
+      Toast.fire({
         icon: "error",
         title: "Oops...",
         text: "Please fill in all fields!",
         showConfirmButton: false,
-        timer: 1500,
-        heightAuto: false,
+        timer: 900,
       });
     } else {
       try {
@@ -43,13 +54,12 @@ const AddMoneyModal = ({
           category: selectedOption,
           timeStamp: serverTimestamp(),
         });
-        Swal.fire({
+        Toast.fire({
           icon: "success",
           title: "Expense Added!",
-          text: `${amount} for ${selectedOption}' has been Added.`,
+          text: `${amount} -> ${selectedOption}' has been Added.`,
           showConfirmButton: false,
           timer: 1500,
-          heightAuto: false,
         });
         setAmount(0);
         setSelectedOption("");
@@ -66,7 +76,7 @@ const AddMoneyModal = ({
       className={`fixed bottom-0 left-0 w-full h-full flex justify-center items-end z-20 ${
         isModalOpen
           ? "opacity-100"
-          : "opacity-0 pointer-events-none transition-opacity duration-500 delay-1000"
+          : "opacity-0 pointer-events-none transition-opacity duration-500/90 delay-1000"
       }`}
     >
       {/* Background overlay with blur effect */}
@@ -90,7 +100,7 @@ const AddMoneyModal = ({
             {/* Select category */}
             <div className="w-full ">
               <select
-                className="w-full border border-gray-300 py-2 rounded-lg"
+                className="w-[370px] border border-gray-300 py-2 rounded-lg"
                 onChange={handleSelectChange}
                 value={selectedOption}
               >
@@ -104,37 +114,23 @@ const AddMoneyModal = ({
                 ))}
               </select>
             </div>
-            {/* Add button 
-            <div className="w-[20%] relative bottom-1 ">
-              <button
-                onClick={() => setCategoryModalOpen(!categoryModalOpen)}
-                className="bg-blue-500 w-20 text-white px-3 py-1 rounded-lg mt-2"
-              >
-                Add
-              </button>
-            </div>
-            */}
           </div>
         </div>
         <div className="flex justify-around mt-2 pt-4 ">
           <button
             onClick={addFullExpense}
-            className=" bg-emerald-400 text-white h-10 w-40 rounded-md"
+            className=" bg-emerald-500/90 font-semibold text-lg text-white h-10 w-40 rounded-md"
           >
             Confirm
           </button>
           <button
             onClick={toggleModal}
-            className="bg-red-400 text-white h-10 w-40 rounded-md"
+            className="bg-red-500/90 font-semibold text-lg text-white h-10 w-40 rounded-md"
           >
             Close
           </button>
         </div>
       </div>
-
-      {/* Modal for adding category 
-
-      */}
     </div>
   );
 };

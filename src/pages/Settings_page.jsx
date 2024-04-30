@@ -3,12 +3,10 @@ import useCategories from "../hooks/useCategories";
 import { deleteDoc, doc } from "firebase/firestore";
 import { db } from "../firebase/firebase_config";
 import Swal from "sweetalert2";
+import { motion } from "framer-motion";
 
 import { IoIosArrowUp } from "react-icons/io";
 import { IoIosArrowDown } from "react-icons/io";
-
-
-
 
 const Settings_page = () => {
   const { categories, addCategory } = useCategories();
@@ -33,24 +31,43 @@ const Settings_page = () => {
     });
   };
 
+  const Toast = Swal.mixin({
+    toast: true,
+    position: "top",
+    showConfirmButton: false,
+    timer: 1200,
+    // timerProgressBar: true,
+    didOpen: (toast) => {
+      toast.onmouseenter = Swal.stopTimer;
+      toast.onmouseleave = Swal.resumeTimer;
+    },
+  });
+
   const handleAddCategory = async () => {
-    if (!inputs) {
-      alert("Please enter a category");
-      return;
-    }
-    try {
-      await addCategory(inputs);
-      Swal.fire({
-        icon: "success",
-        title: "Category Added!",
-        text: `${inputs.icon} ${inputs.category} has been Added.`,
+    if (inputs.icon === "" && inputs.category === "") {
+      Toast.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Please fill in the fields!",
         showConfirmButton: false,
-        timer: 1200,
+        timer: 1100,
       });
-      setNewCategory("");
-      setCategoryModalOpen(!categoryModalOpen);
-    } catch (error) {
-      console.error("Error adding category:", error);
+      return;
+    } else {
+      try {
+        await addCategory(inputs);
+        Swal.fire({
+          icon: "success",
+          title: "Category Added!",
+          text: `${inputs.icon} ${inputs.category} has been Added.`,
+          showConfirmButton: false,
+          timer: 1200,
+        });
+        setNewCategory("");
+        setCategoryModalOpen(!categoryModalOpen);
+      } catch (error) {
+        console.error("Error adding category:", error);
+      }
     }
   };
 
@@ -78,8 +95,11 @@ const Settings_page = () => {
 
   return (
     <>
-      <div
-        className={`h-[82%] ${categoryModalOpen && "bg-black bg-opacity-60"} `}
+      <motion.div
+        initial={{ opacity: 0, height: 0}}
+        animate={{ opacity: 1, height: "82%"}}
+        exit={{ x: "-100%", transition: { duration: 0.2, type: "spring" } }}
+        className={`h-[82%] z-30 ${categoryModalOpen && "bg-black bg-opacity-60 "} `}
       >
         <section
           className={`grid gap-4 place-items-start p-4 z-20 ${
@@ -123,38 +143,42 @@ const Settings_page = () => {
             </span>
           </label>
         </section>
-      </div>
+      </motion.div>
       {categoryModalOpen && (
         <div className="absolute w-[90%] top-1/3 left-1/2 transform -translate-x-1/2 bg-white p-4 rounded-lg z-40 flex flex-col gap-2">
           <div className="flex gap-2 justify-center">
             <input
+            minLength={1}
+            maxLength={2}
               value={inputs.icon}
-              onChange={(e) => handleInputChange('icon', e.target.value)}
+              onChange={(e) => handleInputChange("icon", e.target.value)}
               type="text"
               placeholder="icon..."
               className=" w-[20%] border border-gray-300 p-2 rounded-lg"
             />
             <input
               value={inputs.category}
-              onChange={(e) => handleInputChange('category', e.target.value)}
+              onChange={(e) => handleInputChange("category", e.target.value)}
               type="text"
               placeholder="Add category..."
               className=" w-[80%] border border-gray-300 p-2 rounded-lg"
             />
           </div>
-          <div className="flex justify-center gap-2">
-            <button
+          <div className="flex justify-center gap-4">
+            <motion.button
+              whileTap={{ scale: 1.05 }}
               onClick={handleAddCategory}
               className=" bg-emerald-500/90 font-semibold text-lg text-white h-10 w-[6.5rem] rounded-md"
             >
               Confirm
-            </button>
-            <button
+            </motion.button>
+            <motion.button
+              whileTap={{ scale: 1.05 }}
               onClick={() => setCategoryModalOpen(!categoryModalOpen)}
               className="bg-red-500/90 font-semibold text-lg text-white h-10 w-[6.5rem] rounded-md"
             >
               close
-            </button>
+            </motion.button>
           </div>
         </div>
       )}

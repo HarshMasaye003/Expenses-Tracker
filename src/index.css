@@ -6,4 +6,7 @@
   color-scheme: light ;
 }
 
+::-webkit-scrollbar{
+  display: none;
+}
 

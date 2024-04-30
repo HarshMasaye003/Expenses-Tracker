@@ -31,7 +31,7 @@ const useExpenseFetcher = () => {
     fetchExpenses();
   }, []);
 
-  return { expenses, loading, error, totalExpense };
+  return { expenses, loading, error, totalExpense};
 };
 
 export default useExpenseFetcher;

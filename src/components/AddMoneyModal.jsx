@@ -18,7 +18,7 @@ const AddMoneyModal = ({ toggleModal, isModalOpen, getExensesData }) => {
 
   const [selectedOption, setSelectedOption] = useState([]);
 
-  const [amount, setAmount] = useState(0);
+  const [amount, setAmount] = useState(null);
 
   const handleSelectChange = (event) => {
     const json_obj = JSON.parse(event.target.value);
@@ -38,11 +38,19 @@ const AddMoneyModal = ({ toggleModal, isModalOpen, getExensesData }) => {
   });
 
   const addFullExpense = async () => {
-    if (!amount || !selectedOption) {
+    if (amount === null) {
       Toast.fire({
         icon: "error",
         title: "Oops...",
-        text: "Please fill in all fields!",
+        text: "Amount cannot be empty!",
+        showConfirmButton: false,
+        timer: 900,
+      });
+    } else if (selectedOption === "") {
+      Toast.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Please select a category!",
         showConfirmButton: false,
         timer: 900,
       });
@@ -57,13 +65,13 @@ const AddMoneyModal = ({ toggleModal, isModalOpen, getExensesData }) => {
         Toast.fire({
           icon: "success",
           title: "Expense Added!",
-          text: `${amount} ➜ ${selectedOption.icon}' has been Added.`,
+          text: `${amount} ➜ ${selectedOption.icon}  ${selectedOption.category}`,
           showConfirmButton: false,
           timer: 1500,
         });
         setAmount(0);
         setSelectedOption("");
-        useExpenseFetcher();
+
         console.log(res);
       } catch (error) {
         console.error("Error adding expense:", error);
@@ -88,61 +96,73 @@ const AddMoneyModal = ({ toggleModal, isModalOpen, getExensesData }) => {
         <motion.div
           initial={{ y: "100%" }}
           animate={{ y: 0 }}
-          exit={{ y: "100%", opacity: 0 }}
-          transition={{ type: "spring", stiffness: 100, damping: 15 }}
+          exit={{
+            y: "100%",
+            opacity: 0,
+            transition: { type: "spring", stiffness: 500, damping: 40 },
+          }}
           className="fixed inset-0 z-50 flex justify-center items-end sm:items-center sm:px-0"
         >
           <motion.div
-            initial={{ opacity: 0, y: "50%" }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: "50%" }}
-            transition={{ type: "spring", stiffness: 100, damping: 10 }}
-            className="bg-white w-full h-1/2 p-4 flex flex-col items-center rounded-lg overflow-hidden shadow-xl transform transition-all"
+            initial={{ height: 0 }}
+            animate={{ height: "100%" }}
+            exit={{ height: 0, transition: { duration: 0.2 } }}
+            className="bg-white w-full h-[100dvh] p-4 flex flex-col items-center justify-center transform transition-all"
           >
-            <div className="flex justify-center items-center h-20">
-              <h1 className=" text-lg font-semibold">Add expense</h1>
-            </div>
-            <div className="flex flex-col gap-4 pb-4">
-              <input
-                value={amount}
-                onChange={(e) => setAmount(e.target.value)}
-                type="text"
-                placeholder="Enter amount..."
-                className="border border-gray-300 p-2 rounded-lg"
-              />
-              <div className="flex h-full justify-between py-1">
-                {/* Select category */}
-                <div className="w-full ">
-                  <select
-                    className="w-[370px] border border-gray-300 py-2 rounded-lg"
-                    onChange={handleSelectChange}
-                    value={selectedOption ? JSON.stringify(selectedOption) : ""}
-                  >
-                    <option disabled value="">
-                      Select a category
-                    </option>
-                    {categories.map((category, index) => (
-                      <option key={index} value={JSON.stringify(category)}>
-                        {category.icon} {category.category}
+            <div className=" mb-16">
+              <div className="flex justify-center items-center h-20">
+                <h1 className=" text-lg font-semibold">Add expense</h1>
+              </div>
+              <div className="flex flex-col w-full gap-4 pb-4 items-center">
+                <input
+                  value={amount}
+                  onChange={(e) => setAmount(e.target.value)}
+                  type="number"
+                  placeholder="₹0"
+                  className="border-b-[1px] w-44 text-center text-3xl border-gray-300 p-2"
+                />
+                <div className="flex h-full justify-between py-1">
+                  {/* Select category */}
+                  <div className="w-full ">
+                    <select
+                      className=" w-56 bg-white py-2"
+                      onChange={handleSelectChange}
+                      value={
+                        selectedOption ? JSON.stringify(selectedOption) : ""
+                      }
+                    >
+                      <option disabled value="">
+                        Select a category
                       </option>
-                    ))}
-                  </select>
+                      {categories.map((category, index) => (
+                        <option
+                          className=""
+                          key={index}
+                          value={JSON.stringify(category)}
+                        >
+                          {category.icon} {category.category}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className="flex gap-4 justify-around mt-2 pt-4 ">
-              <button
-                onClick={addFullExpense}
-                className=" bg-emerald-500/90 font-semibold text-lg text-white h-10 w-40 rounded-md"
-              >
-                Confirm
-              </button>
-              <button
-                onClick={toggleModal}
-                className="bg-red-500/90 font-semibold text-lg text-white h-10 w-40 rounded-md"
-              >
-                Close
-              </button>
+              <div className="flex gap-4 justify-around mt-1 pt-4 ">
+                <motion.button
+                  whileTap={{ scale: 1.1 }}
+                  onClick={addFullExpense}
+                  className=" bg-emerald-500/90 font-semibold text-lg text-white h-10 w-40 rounded-md"
+                >
+                  Confirm
+                </motion.button>
+                <motion.button
+                  whileTap={{ scale: 1.1 }}
+                  onClick={toggleModal}
+                  className="bg-red-500/90 font-semibold text-lg text-white h-10 w-40 rounded-md"
+                >
+                  Close
+                </motion.button>
+              </div>
             </div>
           </motion.div>
         </motion.div>

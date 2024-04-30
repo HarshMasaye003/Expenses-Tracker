@@ -12,13 +12,10 @@ import { v4 as uuidv4 } from "uuid";
 import useCategories from "../hooks/useCategories";
 import { motion } from "framer-motion";
 
-import { FaArrowRightLong } from "react-icons/fa6";
-
 const AddMoneyModal = ({ toggleModal, isModalOpen, getExensesData }) => {
   const { categories } = useCategories();
 
-  const [selectedOption, setSelectedOption] = useState('');
-
+  const [selectedOption, setSelectedOption] = useState([]);
 
   const [amount, setAmount] = useState(0);
 
@@ -116,11 +113,9 @@ const AddMoneyModal = ({ toggleModal, isModalOpen, getExensesData }) => {
                 {/* Select category */}
                 <div className="w-full ">
                   <select
-                  
                     className="w-[370px] border border-gray-300 py-2 rounded-lg"
                     onChange={handleSelectChange}
-                    value={selectedOption}
-                  
+                    value={selectedOption ? JSON.stringify(selectedOption) : ""}
                   >
                     <option disabled value="">
                       Select a category

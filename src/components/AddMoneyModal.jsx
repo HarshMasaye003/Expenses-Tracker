@@ -11,6 +11,7 @@ import { db } from "../firebase/firebase_config";
 import { v4 as uuidv4 } from "uuid";
 import useCategories from "../hooks/useCategories";
 import { motion } from "framer-motion";
+import useExpenseFetcher from "../hooks/useExpenseFetcher";
 
 const AddMoneyModal = ({ toggleModal, isModalOpen, getExensesData }) => {
   const { categories } = useCategories();
@@ -62,7 +63,7 @@ const AddMoneyModal = ({ toggleModal, isModalOpen, getExensesData }) => {
         });
         setAmount(0);
         setSelectedOption("");
-        getExensesData();
+        useExpenseFetcher();
         console.log(res);
       } catch (error) {
         console.error("Error adding expense:", error);

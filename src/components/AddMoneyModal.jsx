@@ -12,6 +12,7 @@ import { v4 as uuidv4 } from "uuid";
 import useCategories from "../hooks/useCategories";
 import { motion } from "framer-motion";
 import useExpenseFetcher from "../hooks/useExpenseFetcher";
+import { midVibration, smallVibration } from "../hooks/useVibrate";
 
 const AddMoneyModal = ({ toggleModal, isModalOpen, getExensesData }) => {
   const { categories } = useCategories();
@@ -150,14 +151,18 @@ const AddMoneyModal = ({ toggleModal, isModalOpen, getExensesData }) => {
               <div className="flex gap-4 justify-around mt-1 pt-4 ">
                 <motion.button
                   whileTap={{ scale: 1.1 }}
-                  onClick={addFullExpense}
+                  onClick={() => {
+                    addFullExpense(), midVibration();
+                  }}
                   className=" bg-emerald-500/90 font-semibold text-lg text-white h-10 w-40 rounded-md"
                 >
                   Confirm
                 </motion.button>
                 <motion.button
                   whileTap={{ scale: 1.1 }}
-                  onClick={toggleModal}
+                  onClick={() => {
+                    toggleModal(), midVibration();
+                  }}
                   className="bg-red-500/90 font-semibold text-lg text-white h-10 w-40 rounded-md"
                 >
                   Close

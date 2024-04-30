@@ -7,12 +7,15 @@ import { db } from "../firebase/firebase_config";
 import useExpenseFetcher from "../hooks/useExpenseFetcher";
 import { motion } from "framer-motion";
 
+import { smallVibration } from "../hooks/useVibrate";
+
 const AddExpenses_page = () => {
   const [isModalOpen, setIsModalOpen] = useState(false); // State to track modal open/close
 
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
   };
+
 
   const { expenses, totalExpense } = useExpenseFetcher();
 
@@ -43,7 +46,7 @@ const AddExpenses_page = () => {
             <h3 className=" font-light text-4xl text-red-500/80 ">{`- ₹${totalExpense}`}</h3>
           </div>
           <div>
-            <div className="flex justify-between items-center px-4 text-gray-500">
+            <div className="flex justify-between items-center px-3 text-gray-500">
               <div className=" py-1 text-sm">
                 <h1>Today</h1>
               </div>
@@ -64,7 +67,7 @@ const AddExpenses_page = () => {
                     <h1 className=" text-md font-semibold">
                       {expense.category}
                     </h1>
-                    <h3 className=" text-xs">
+                    <h3 className=" text-[0.6rem]">
                       {convertTimestamp(expense.timeStamp)}
                     </h3>
                   </div>
@@ -80,8 +83,9 @@ const AddExpenses_page = () => {
 
         <motion.button
           className="h-10 w-10 z-10 fixed bottom-24 right-5 flex justify-center items-center bg-black/90 rounded-md"
-          onClick={toggleModal}
-          whileTap={{ scale: 1.2 }} // Add scale animation on tap
+          onClick={()=>{toggleModal(),smallVibration()}}
+
+          whileTap={{ scale: 1.2 }} 
         >
           <IoMdAddCircleOutline className="text-white text-3xl sm:text-3xl md:text-5xl lg:text-5xl " />
         </motion.button>

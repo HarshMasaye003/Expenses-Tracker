@@ -62,7 +62,7 @@ const AddExpenses_page = () => {
               className="bg-white px-3 py-2 flex justify-between items-center w-full border-b-[1px] border-gray-300 "
             >
               <div className="flex items-center gap-4">
-                <div className=" bg-blue-300 py-1 rounded-lg text-3xl">
+                <div className=" py-1 text-3xl">
                   <span>{expense.icon}</span>
                 </div>
                 <div>

@@ -6,7 +6,7 @@ import { MdOutlineQueryStats } from "react-icons/md";
 import { Link } from "react-router-dom";
 
 import { motion } from "framer-motion";
-import { smallVibration } from "../hooks/useVibrate";
+import { midVibration, smallVibration } from "../hooks/useVibrate";
 
 const Footer = () => {
   const menu = [
@@ -40,7 +40,7 @@ const Footer = () => {
           <Link to={item.path} key={index}>
             <motion.div
               whileTap={{ scale: 1.2 }}
-              onClick={smallVibration}
+              onClick={()=>midVibration()}
               className="flex flex-col justify-center items-center"
             >
               <motion.div

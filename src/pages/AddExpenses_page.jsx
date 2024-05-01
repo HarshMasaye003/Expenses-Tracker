@@ -71,7 +71,7 @@ const AddExpenses_page = () => {
           <div className="w-full h-[40%] overflow-hidden flex flex-col gap-1 justify-center items-center ">
             <h1 className=" font-normal text-xs ml-3">Today's Expenses</h1>
             <h3 className=" font-light text-4xl text-red-500/80 " id="">
-              {totalExpense}
+              {`-₹ ${totalExpense}`}
             </h3>
           </div>
           <div>

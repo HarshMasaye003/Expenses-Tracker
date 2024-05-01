@@ -18,6 +18,8 @@ import TagSelectionModal from "./TagSelectionModal";
 import Money_Tag_Inputs from "./Money_Tag_Inputs";
 import Borrow_Loan_Inputs from "./Borrow_Loan_Input";
 import { addFullExpense } from "../utils/addExpenseHandler";
+import CloseButton from "./CloseButton";
+import ConfirmButton from "./ConfirmButton";
 
 const AddMoneyModal = ({ toggleModal, isModalOpen, getExensesData }) => {
   const [selectedOption, setSelectedOption] = useState([]);
@@ -114,24 +116,12 @@ const AddMoneyModal = ({ toggleModal, isModalOpen, getExensesData }) => {
                 </div>
               </div>
               <div className="flex gap-4 justify-evenly mt-10 pt-4 ">
-                <motion.button
-                  whileTap={{ scale: 1.1 }}
-                  onClick={() => {
-                    handleAddExpense(), midVibration();
-                  }}
-                  className=" bg-emerald-500/90 font-semibold text-lg text-white h-10 w-40 rounded-md"
-                >
-                  Confirm
-                </motion.button>
-                <motion.button
-                  whileTap={{ scale: 1.1 }}
-                  onClick={() => {
-                    toggleModal(), midVibration();
-                  }}
-                  className="bg-red-500/90 font-semibold text-lg text-white h-10 w-40 rounded-md"
-                >
-                  Close
-                </motion.button>
+                <ConfirmButton
+                  onClickFunctions={[{ func: handleAddExpense, params: [] }]}
+                />
+                <CloseButton
+                  onClickFunctions={[{ func: toggleModal, params: [] }]}
+                />
               </div>
             </div>
           </motion.div>

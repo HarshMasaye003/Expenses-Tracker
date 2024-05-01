@@ -2,6 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { midVibration } from "../hooks/useVibrate";
 import useCategories from "../hooks/useCategories";
+import CloseButton from "./CloseButton";
 
 const TagSelectionModal = ({ handleSelectChange, setToggleCategoryModal }) => {
   const { categories } = useCategories();
@@ -48,7 +49,7 @@ const TagSelectionModal = ({ handleSelectChange, setToggleCategoryModal }) => {
         </button>
         <button
           onClick={() => {
-            setToggleCategoryModal(false), midVibration();
+            setToggleCategoryModal(false);
           }}
           className="w-44 mr-auto ml-auto bg-red-500/80 rounded-md text-white font-semibold text-lg py-1 px-4 "
         >

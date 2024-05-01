@@ -14,6 +14,7 @@ const Section = () => {
       <Routes location={location} key={location.pathname}>
         <Route path="/" element={<AddExpenses_page />} />
         <Route path="/stats" element={<Statistics_page />} />
+        {/* <Route path="/stats" element={<NewAdd_page />} /> */}
         <Route path="/settings" element={<Settings_page />} />
       </Routes>
     </AnimatePresence>

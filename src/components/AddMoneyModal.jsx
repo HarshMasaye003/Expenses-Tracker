@@ -8,13 +8,16 @@ import {
 import Swal from "sweetalert2";
 import React, { useCallback, useEffect, useState } from "react";
 import { db } from "../firebase/firebase_config";
-import { v4 as uuidv4 } from "uuid";
+
 import useCategories from "../hooks/useCategories";
 import { motion } from "framer-motion";
 import useExpenseFetcher from "../hooks/useExpenseFetcher";
 import { midVibration, smallVibration } from "../hooks/useVibrate";
 import genCurrentTime from "../utils/genCurrentTime";
 import TagSelectionModal from "./TagSelectionModal";
+import Money_Tag_Inputs from "./Money_Tag_Inputs";
+import Borrow_Loan_Inputs from "./Borrow_Loan_Input";
+import { addFullExpense } from "../utils/addExpenseHandler";
 
 const AddMoneyModal = ({ toggleModal, isModalOpen, getExensesData }) => {
   const [selectedOption, setSelectedOption] = useState([]);
@@ -28,59 +31,17 @@ const AddMoneyModal = ({ toggleModal, isModalOpen, getExensesData }) => {
     console.log(json_obj);
   };
 
-  const Toast = Swal.mixin({
-    toast: true,
-    position: "top",
-    showConfirmButton: false,
-    timer: 1200,
-    // timerProgressBar: true,
-    didOpen: (toast) => {
-      toast.onmouseenter = Swal.stopTimer;
-      toast.onmouseleave = Swal.resumeTimer;
-    },
-  });
+  const handleAddExpense = useCallback(() => {
+    addFullExpense(amount, selectedOption);
+    setAmount(0);
+    setSelectedOption("");
+    toggleModal();
+  }, [amount, selectedOption]);
 
-  const addFullExpense = async () => {
-    if (amount === null) {
-      Toast.fire({
-        icon: "error",
-        title: "Oops...",
-        text: "Amount cannot be empty!",
-        showConfirmButton: false,
-        timer: 900,
-      });
-    } else if (selectedOption === "") {
-      Toast.fire({
-        icon: "error",
-        title: "Oops...",
-        text: "Please select a category!",
-        showConfirmButton: false,
-        timer: 900,
-      });
-    } else {
-      try {
-        const res = await setDoc(doc(db, "expenses", uuidv4()), {
-          amount: amount,
-          icon: selectedOption.icon,
-          category: selectedOption.category,
-          time_stamp: genCurrentTime(),
-        });
-        Toast.fire({
-          icon: "success",
-          title: "Expense Added!",
-          text: `${amount} ➜ ${selectedOption.icon}  ${selectedOption.category}`,
-          showConfirmButton: false,
-          timer: 1500,
-        });
-        setAmount(0);
-        setSelectedOption("");
-        toggleModal();
+  const [ActiveTab, setActiveTab] = useState(1);
 
-        console.log(res);
-      } catch (error) {
-        console.error("Error adding expense:", error);
-      }
-    }
+  const activeTab = (index) => {
+    setActiveTab(index);
   };
 
   return (
@@ -94,7 +55,7 @@ const AddMoneyModal = ({ toggleModal, isModalOpen, getExensesData }) => {
             opacity: 0,
             transition: { type: "spring", stiffness: 500, damping: 40 },
           }}
-          className="fixed inset-0 z-50 flex justify-center items-end sm:items-center sm:px-0"
+          className="fixed inset-0 z-50 flex justify-center items-end"
         >
           <motion.div
             initial={{ height: 0 }}
@@ -102,54 +63,75 @@ const AddMoneyModal = ({ toggleModal, isModalOpen, getExensesData }) => {
             exit={{ height: 0, transition: { duration: 0.2 } }}
             className="bg-white w-full h-[100dvh] p-4 flex flex-col items-center justify-center transform transition-all"
           >
-            <div className=" mb-16">
-              <div className="flex justify-center items-center h-20">
-                <h1 className=" text-lg font-semibold">Add expense</h1>
-              </div>
-              <div className="flex flex-col w-full gap-6 pb-4 items-center">
-                <input
-                  value={amount}
-                  onChange={(e) => setAmount(e.target.value)}
-                  type="number"
-                  placeholder="₹0"
-                  className="border-b-[1px] w-44 text-center text-3xl border-gray-300 p-2"
-                />
-
-                <input
-                  type="text"
-                  value={
-                    selectedOption != ""
-                      ? `${selectedOption.icon} ${selectedOption.category}`
-                      : "Tags"
-                  }
-                  placeholder="Select a category"
-                  onClick={() => {
-                    setToggleCategoryModal(!toggleCategoryModal),
-                      midVibration();
-                  }}
-                  readOnly
-                  className=" border-b-[1px] border-gray-300 w-48 py-1 px-4 text-center text-xl font-semibold text-gray-500/70 "
-                />
-                <div className="flex gap-4 justify-around mt-1 pt-4 ">
-                  <motion.button
-                    whileTap={{ scale: 1.1 }}
-                    onClick={() => {
-                      addFullExpense(), midVibration();
-                    }}
-                    className=" bg-emerald-500/90 font-semibold text-lg text-white h-10 w-40 rounded-md"
+            <div className="container w-[100dvw]">
+              <ul className="tab-list h-[50px] flex text-lg ">
+                {[1, 2].map((index) => (
+                  <motion.li
+                    key={index}
+                    className={`w-1/2 flex justify-center items-center text-md font-semibold  ${
+                      ActiveTab === index
+                        ? "bg-black text-white mx-2 my-1 rounded-md"
+                        : ""
+                    }`}
+                    onClick={() => activeTab(index)}
                   >
-                    Confirm
-                  </motion.button>
-                  <motion.button
-                    whileTap={{ scale: 1.1 }}
-                    onClick={() => {
-                      toggleModal(), midVibration();
-                    }}
-                    className="bg-red-500/90 font-semibold text-lg text-white h-10 w-40 rounded-md"
-                  >
-                    Close
-                  </motion.button>
+                    {index === 1 ? "Expenses" : "Borrowed / Loaned"}
+                  </motion.li>
+                ))}
+              </ul>
+              <div className="content-container">
+                <div
+                  className={`${
+                    ActiveTab === 1 ? "flex flex-col h-52 p-2 mt-10 " : "hidden"
+                  }`}
+                >
+                  <div className="flex justify-center items-center h-20">
+                    <h1 className=" text-lg font-semibold">Add expense</h1>
+                  </div>
+                  <Money_Tag_Inputs
+                    amount={amount}
+                    setAmount={setAmount}
+                    setToggleCategoryModal={setToggleCategoryModal}
+                    selectedOption={selectedOption}
+                  />
                 </div>
+                <div
+                  className={`${
+                    ActiveTab === 2 ? "flex flex-col h-52 p-2 mt-10 " : "hidden"
+                  }`}
+                >
+                  <div className="flex justify-center items-center h-20">
+                    <h1 className=" text-md font-semibold">
+                      Add Borrowed | Loaned money...
+                    </h1>
+                  </div>
+                  <Borrow_Loan_Inputs
+                    amount={amount}
+                    setAmount={setAmount}
+                    setToggleCategoryModal={setToggleCategoryModal}
+                    selectedOption={selectedOption}
+                  />
+                </div>
+              </div>
+              <div className="flex gap-4 justify-evenly mt-10 pt-4 ">
+                <motion.button
+                  whileTap={{ scale: 1.1 }}
+                  onClick={() => {
+                    handleAddExpense(), midVibration();
+                  }}
+                  className=" bg-emerald-500/90 font-semibold text-lg text-white h-10 w-40 rounded-md"
+                >
+                  Confirm
+                </motion.button>
+                <motion.button
+                  whileTap={{ scale: 1.1 }}
+                  onClick={() => {
+                    toggleModal(), midVibration();
+                  }}
+                  className="bg-red-500/90 font-semibold text-lg text-white h-10 w-40 rounded-md"
+                >
+                  Close
+                </motion.button>
               </div>
             </div>
           </motion.div>

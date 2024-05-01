@@ -44,11 +44,11 @@ const Footer = () => {
               className="flex flex-col justify-center items-center"
             >
               <motion.div
-                className={`text-xl sm:text-2xl md:text-3xl lg:text-4xl ${item.custom_css} flex justify-center items-center rounded-full`}
+                className={`text-xl ${item.custom_css} flex justify-center items-center rounded-full`}
               >
                 {item.icon}
               </motion.div>
-              <div className="text-xs sm:text-xs md:text-md lg:text-lg mt-1 font-bold ">
+              <div className="text-xs mt-1 font-bold ">
                 {item.text}
               </div>
             </motion.div>

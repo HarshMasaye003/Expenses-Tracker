@@ -23,40 +23,40 @@ const AddExpenses_page = () => {
     return date.toDateString();
   };
 
-
   function increaseNumberAnimation(elementId, endNumber, speed = 1) {
-    const element = document.getElementById(elementId)
-    
-    if(!element) return
-    
+    const element = document.getElementById(elementId);
+
+    if (!element) return;
+
     /* A dataset variable that is added to the animated element*/
-    const animationRunning = JSON.parse(element.dataset.animationRunning ?? false)
-    
-    if(animationRunning) return
-    
-    element.dataset.animationRunning = true
-    
-    incNbrRec(0, endNumber, element, speed)
+    const animationRunning = JSON.parse(
+      element.dataset.animationRunning ?? false
+    );
+
+    if (animationRunning) return;
+
+    element.dataset.animationRunning = true;
+
+    incNbrRec(0, endNumber, element, speed);
   }
-  
+
   function incNbrRec(currentNumber, endNumber, element, speed) {
     if (currentNumber <= endNumber) {
-      element.innerHTML = currentNumber
-      setTimeout(function() {
-        incNbrRec(currentNumber + 1, endNumber, element, speed)
-      }, speed)
+      element.innerHTML = currentNumber;
+      setTimeout(function () {
+        incNbrRec(currentNumber + 1, endNumber, element, speed);
+      }, speed);
     } else {
-      element.dataset.animationRunning = false
+      element.dataset.animationRunning = false;
     }
   }
-
 
   return (
     <motion.div
       initial={{ opacity: 0, height: 0 }}
       animate={{ opacity: 1, height: "82%" }}
       exit={{ x: "100%", transition: { duration: 0.2, type: "spring" } }}
-      className="h-[82%] w-full sm:w-[40%] md:ww-[40%]"
+      className="h-[82%] w-full"
     >
       <section className=" flex h-full justify-center items-center">
         {isModalOpen && (
@@ -70,14 +70,16 @@ const AddExpenses_page = () => {
         <div className="w-full h-full overflow-scroll">
           <div className="w-full h-[40%] overflow-hidden flex flex-col gap-1 justify-center items-center ">
             <h1 className=" font-normal text-xs ml-3">Today's Expenses</h1>
-            <h3 className=" font-light text-4xl text-red-500/80 " id="" >{totalExpense}</h3>
+            <h3 className=" font-light text-4xl text-red-500/80 " id="">
+              {totalExpense}
+            </h3>
           </div>
           <div>
             <div className="flex border-b-[1px] border-gray-300 justify-between items-center px-3 text-gray-500">
               <div className=" py-1 text-sm">
                 <h1>Today</h1>
               </div>
-              <div className=" text-sm" >
+              <div className=" text-sm">
                 <h1>{totalExpense}</h1>
               </div>
             </div>
@@ -121,7 +123,7 @@ const AddExpenses_page = () => {
           }}
           whileTap={{ scale: 1.2 }}
         >
-          <IoMdAddCircleOutline className="text-white text-3xl sm:text-3xl md:text-5xl lg:text-5xl " />
+          <IoMdAddCircleOutline className="text-white text-3xl " />
         </motion.button>
       </section>
     </motion.div>

@@ -11,10 +11,10 @@ const firebaseConfig = {
   projectId: "even-dream-330310",
   storageBucket: "even-dream-330310.appspot.com",
   messagingSenderId: "642993678010",
-  appId: "1:642993678010:web:b03de6fa607455d60f0483"
+  appId: "1:642993678010:web:b03de6fa607455d60f0483",
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-export const db = getFirestore(app)
+export const db = getFirestore(app);
 export default app;
